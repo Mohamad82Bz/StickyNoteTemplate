@@ -2,12 +2,15 @@ package org.sayandev.projectname
 
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.plugin.java.JavaPlugin
+import org.sayandev.projectname.command.ExampleCommand
 import org.sayandev.projectname.config.LanguageConfig
 import org.sayandev.projectname.config.language
 import org.sayandev.projectname.database.Database
+import org.sayandev.projectname.listener.ExampleSuspendingListener
 import org.sayandev.stickynote.bukkit.hasPlugin
 import org.sayandev.stickynote.bukkit.hook.PlaceholderAPIHook
 import org.sayandev.stickynote.bukkit.log
+import org.sayandev.stickynote.bukkit.registerSuspendingListener
 import org.sayandev.stickynote.bukkit.utils.AdventureUtils
 import org.sayandev.stickynote.loader.bukkit.StickyNoteBukkitLoader
 
@@ -36,10 +39,10 @@ class ProjectName: JavaPlugin() {
         }
 
         log("Registering commands..")
-        //TODO: Register commands
+        ExampleCommand()
 
         log("Registering listeners..")
-        //TODO: Register listeners
+        registerSuspendingListener(ExampleSuspendingListener())
 
         if (!initializeConfigFiles()) {
             server.pluginManager.disablePlugin(this)

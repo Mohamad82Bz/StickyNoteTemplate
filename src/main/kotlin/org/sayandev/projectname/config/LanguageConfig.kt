@@ -20,6 +20,7 @@ data class LanguageConfig(
     data class General(
         //TODO: Change Prefix
         val prefix: String = "<dark_aqua>Prefix <gray>»",
+        val reload: String = "<prefix> <gray>Reloaded configuration files.",
     )
 
     companion object {
