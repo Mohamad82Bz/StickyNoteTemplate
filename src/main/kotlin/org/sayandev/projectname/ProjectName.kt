@@ -21,7 +21,7 @@ class ProjectName: JavaPlugin() {
         } catch (e: Exception) {
             logger.severe("Could not download libraries. The plugin requires its external libraries to function.")
             logger.severe("This happens if your server's network is unstable. You can try restarting the server.")
-            logger.severe("You can also try to delete $name/lib folder and restarting the server.")
+            logger.severe("You can also try to delete plugins/stickynote/lib directory and restarting the server.")
             logger.severe("For more detailed help, please contact us.")
             server.pluginManager.disablePlugin(this)
             return
