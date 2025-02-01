@@ -4,7 +4,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.plugin.java.JavaPlugin
 import org.sayandev.projectname.command.ExampleCommand
 import org.sayandev.projectname.config.LanguageConfig
-import org.sayandev.projectname.config.language
 import org.sayandev.projectname.database.Database
 import org.sayandev.projectname.listener.ExampleSuspendingListener
 import org.sayandev.stickynote.bukkit.hasPlugin
@@ -25,6 +24,7 @@ class ProjectName: JavaPlugin() {
             logger.severe("You can also try to delete $name/lib folder and restarting the server.")
             logger.severe("For more detailed help, please contact us.")
             server.pluginManager.disablePlugin(this)
+            return
         }
         Platform.setPlatform(Platform("bukkit", logger, dataFolder))
 
@@ -49,7 +49,7 @@ class ProjectName: JavaPlugin() {
             return
         }
 
-        AdventureUtils.setTagResolver(Placeholder.parsed("prefix", language.general.prefix))
+        AdventureUtils.setTagResolver(Placeholder.parsed("prefix", LanguageConfig.get().general.prefix))
 
         //Enable PlaceholderAPI if it was installed
         if (hasPlugin("PlaceholderAPI")) {
@@ -65,7 +65,7 @@ class ProjectName: JavaPlugin() {
     fun initializeConfigFiles(): Boolean {
         try {
             log("Loading ${LanguageConfig.FILE_NAME}")
-            language
+            LanguageConfig.reload()
             return true
         } catch (e: ExceptionInInitializerError) {
             logger.severe("Failed to load one of the config files. This is likely due to a syntax error in the config file," +

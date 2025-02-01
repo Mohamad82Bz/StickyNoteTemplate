@@ -7,8 +7,7 @@ import org.sayandev.stickynote.core.configuration.Config
 import org.spongepowered.configurate.objectmapping.ConfigSerializable
 import org.spongepowered.configurate.objectmapping.meta.Setting
 import java.io.File
-
-val storage: StorageConfig = StorageConfig.fromConfig() ?: StorageConfig.defaultConfig()
+import kotlin.text.get
 
 @ConfigSerializable
 data class StorageConfig(
@@ -22,10 +21,6 @@ data class StorageConfig(
     val poolingSize: Int = 5,
 ): Config(pluginDirectory, FILE_NAME) {
 
-    init {
-        load()
-    }
-
     enum class DatabaseMethod {
         SQLITE,
         MYSQL,
@@ -35,9 +30,14 @@ data class StorageConfig(
     companion object {
         private const val FILE_NAME = "storage.yml"
         val storageConfigFile = File(Platform.get().pluginDirectory, FILE_NAME)
+        val config = fromConfig() ?: defaultConfig()
+
+        fun get(): StorageConfig {
+            return config
+        }
 
         fun defaultConfig(): StorageConfig {
-            return StorageConfig()
+            return StorageConfig().apply { save() }
         }
 
         fun fromConfig(): StorageConfig? {

@@ -5,16 +5,10 @@ import org.sayandev.stickynote.core.configuration.Config
 import org.spongepowered.configurate.objectmapping.ConfigSerializable
 import java.io.File
 
-var language: LanguageConfig = LanguageConfig.fromConfig() ?: LanguageConfig.defaultConfig()
-
 @ConfigSerializable
 data class LanguageConfig(
     val general: General = General()
 ): Config(Platform.get().pluginDirectory, FILE_NAME) {
-
-    init {
-        load()
-    }
 
     @ConfigSerializable
     data class General(
@@ -26,17 +20,22 @@ data class LanguageConfig(
     companion object {
         const val FILE_NAME = "language.yml"
         val languageFile = File(Platform.get().pluginDirectory, FILE_NAME)
+        private var config = fromConfig() ?: defaultConfig()
+
+        fun get(): LanguageConfig {
+            return config
+        }
 
         fun defaultConfig(): LanguageConfig {
-            return LanguageConfig()
+            return LanguageConfig().apply { save() }
         }
 
         fun fromConfig(): LanguageConfig? {
             return fromConfig<LanguageConfig>(languageFile)
         }
 
-        fun reloadConfig() {
-            language = fromConfig() ?: defaultConfig()
+        fun reload() {
+            config = fromConfig() ?: defaultConfig()
         }
     }
 
