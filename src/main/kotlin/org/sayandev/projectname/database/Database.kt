@@ -9,7 +9,6 @@ import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.experimental.suspendedTransactionAsync
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.sayandev.projectname.config.StorageConfig
-import org.sayandev.projectname.config.storage
 import org.sayandev.stickynote.bukkit.plugin
 import org.sayandev.stickynote.bukkit.pluginDirectory
 import org.sayandev.stickynote.core.coroutine.dispatcher.AsyncDispatcher
@@ -17,26 +16,26 @@ import org.sayandev.stickynote.core.coroutine.dispatcher.AsyncDispatcher
 object Database {
 
     @JvmStatic
-    val databaseDispatcher = AsyncDispatcher("${plugin.name.lowercase()}-${storage.method.name.lowercase()}-thread", storage.poolingSize)
+    val databaseDispatcher = AsyncDispatcher("${plugin.name.lowercase()}-${StorageConfig.get().method.name.lowercase()}-thread", StorageConfig.get().poolingSize)
     private val database: Database
 
     init {
         val config = HikariConfig().apply {
-            jdbcUrl = when (storage.method) {
+            jdbcUrl = when (StorageConfig.get().method) {
                 StorageConfig.DatabaseMethod.SQLITE -> "jdbc:sqlite:${pluginDirectory.absolutePath}/storage"
                 StorageConfig.DatabaseMethod.MYSQL,
-                StorageConfig.DatabaseMethod.MARIADB -> "jdbc:${storage.method.name.lowercase()}://${storage.host}:${storage.port}/${storage.database}"
+                StorageConfig.DatabaseMethod.MARIADB -> "jdbc:${StorageConfig.get().method.name.lowercase()}://${StorageConfig.get().host}:${StorageConfig.get().port}/${StorageConfig.get().database}"
             }
 
-            driverClassName = when (storage.method) {
+            driverClassName = when (StorageConfig.get().method) {
                 StorageConfig.DatabaseMethod.SQLITE -> "org.sqlite.JDBC"
                 StorageConfig.DatabaseMethod.MYSQL -> "com.mysql.cj.jdbc.Driver"
                 StorageConfig.DatabaseMethod.MARIADB -> "org.mariadb.jdbc.Driver"
             }
 
-            username = storage.username
-            password = storage.password
-            maximumPoolSize = storage.poolingSize
+            username = StorageConfig.get().username
+            password = StorageConfig.get().password
+            maximumPoolSize = StorageConfig.get().poolingSize
         }
         database = Database.connect(HikariDataSource(config))
         TransactionManager.defaultDatabase = database
